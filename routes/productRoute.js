@@ -3,6 +3,7 @@ import { addProduct, getListProducts, getProductById, updateProduct, deleteProdu
 import upload from '../middleware/multer.js';
 import adminAuth from '../middleware/adminAuth.js';
 import { checkPermission } from '../middleware/checkPermission.js';
+import { PERMISSIONS } from '../constants/permissions.js';
 
 const productRouter = express.Router();
 
