@@ -1,5 +1,6 @@
 import Category from "../models/categoryModel.js";
 import Product from "../models/productModel.js";
+import AppError from "../utils/AppError.js";
 
 const createCategoryService = async (data) => {
     try {

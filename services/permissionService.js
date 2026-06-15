@@ -1,4 +1,5 @@
 import Permission from "../models/permissionModel.js";
+import AppError from "../utils/AppError.js";
 
 const createPermissionService = async ({ name, description }) => {
 

@@ -1,20 +1,9 @@
 import Role from "../models/roleModel.js";
 import Permission from "../models/permissionModel.js";
+import { permissionNames } from "../constants/permissions.js";
 
 export const createRoleAndPermission = async () => {
     try {
-        const permissionNames = [
-            "create_product",
-            "delete_product",
-            "update_product",
-            "view_products",
-            "view_orders",
-            "create_permission",
-            "view_permissions",
-            "create_role",
-            "view_roles"
-        ];
-
         const permissions = await Promise.all(
             permissionNames.map((name) =>
                 Permission.findOneAndUpdate(
@@ -53,8 +42,6 @@ export const createRoleAndPermission = async () => {
                 returnDocument: "after",
             }
         );
-
-        console.log("Created roles and permissions successfully");
     } catch (error) {
         console.error("Create roles and permissions error:", error.message);
     }

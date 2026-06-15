@@ -9,7 +9,7 @@ const productRouter = express.Router();
 productRouter.post('/', upload.single('image'), adminAuth, checkPermission("create_product"), addProduct);
 productRouter.get('/', getListProducts);
 productRouter.get('/:id', getProductById);
-productRouter.put('/:id', updateProduct);
-productRouter.delete('/:id', deleteProduct);
+productRouter.put('/:id', adminAuth, updateProduct);
+productRouter.delete('/:id', adminAuth, deleteProduct);
 
 export default productRouter;

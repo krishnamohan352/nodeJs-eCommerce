@@ -1,11 +1,12 @@
 import Role from "../models/roleModel.js";
+import AppError from "../utils/AppError.js";
 
 const createRoleService = async ({ name, permissions }) => {
 
     const existing = await Role.findOne({ name });
 
     if (existing) {
-        throw new Error("Role already exists");
+        throw new AppError("Role already exists", 400)
     }
 
     const role = await Role.create({
@@ -29,7 +30,7 @@ const updateRoleService = async ({ id, name, permissions }) => {
     ).populate("permissions");
 
     if (!role) {
-        throw new Error("Role not found");
+        throw new AppError("Role not found", 404);
     }
 
     return role;
@@ -39,9 +40,8 @@ const deleteRoleService = async (id) => {
     const role = await Role.findByIdAndDelete(id);
 
     if (!role) {
-        throw new Error("Role not found");
+        throw new AppError("Role not found", 404);
     }
-
     return role;
 };
 

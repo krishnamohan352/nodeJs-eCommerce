@@ -1,6 +1,7 @@
 import Cart from "../models/cartModel.js";
 import Order from "../models/orderModel.js";
 import Product from "../models/productModel.js";
+import AppError from "../utils/AppError.js";
 
 const placeOrderService = async (userId, address, paymentMethod) => {
 

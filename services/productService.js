@@ -1,5 +1,6 @@
 import Product from '../models/productModel.js';
 import Category from "../models/categoryModel.js";
+import AppError from "../utils/AppError.js";
 
 const addProductService = async ({
     name,

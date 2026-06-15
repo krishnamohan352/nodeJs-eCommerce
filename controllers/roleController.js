@@ -1,4 +1,4 @@
-import { createRoleService, getAllRolesService, updateRoleService, deleteRoleService} from "../services/roleService.js";
+import { createRoleService, getAllRolesService, updateRoleService, deleteRoleService } from "../services/roleService.js";
 
 const createRole = async (req, res) => {
     try {
@@ -6,14 +6,14 @@ const createRole = async (req, res) => {
 
         const role = await createRoleService({ name, permissions });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Role created",
             role
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -24,16 +24,16 @@ const getAllRoles = async (req, res) => {
     try {
         const roles = await getAllRolesService();
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Roles retrieved",
             roles
         });
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: "Internal server error"
+            message: error.message
         });
     }
 };
@@ -45,14 +45,14 @@ const updateRole = async (req, res) => {
 
         const role = await updateRoleService({ id, name, permissions });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Role updated",
             role
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -65,13 +65,13 @@ const deleteRole = async (req, res) => {
 
         await deleteRoleService(id);
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: "Role deleted"
+            message: "Role deleted successfully"
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });

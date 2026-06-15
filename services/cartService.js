@@ -1,5 +1,6 @@
 import Cart from '../models/cartModel.js';
 import Product from '../models/productModel.js';
+import AppError from "../utils/AppError.js";
 
 const addToCartService = async ({ userId, items }) => {
 

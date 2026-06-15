@@ -1,6 +1,6 @@
 import {
     loginUserService,
-    registerUserService,    
+    registerUserService,
     getListUsersService,
     updateUserService,
     deleteUserService
@@ -16,7 +16,7 @@ const registerUser = async (req, res) => {
             token: result.token
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -35,7 +35,7 @@ const updateUser = async (req, res) => {
             data: user
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -50,7 +50,7 @@ const deleteUser = async (req, res) => {
             message: "User deleted successfully"
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -68,9 +68,9 @@ const loginUser = async (req, res) => {
             token: result.token
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Internal server error"
+            message: error.message
         });
     }
 };
@@ -84,9 +84,9 @@ const getListUsers = async (req, res) => {
             users
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Internal server error"
+            message: error.message
         });
     }
 }
