@@ -14,8 +14,8 @@ const placeOrder = async (req, res) => {
             message: "Order placed successfully",
             order
         });
-    } catch (error) {
-        return res.status(400).json({
+    } catch (error) {   
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -35,7 +35,7 @@ const getOrderById = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -55,7 +55,7 @@ const updateOrderStatus = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -72,7 +72,7 @@ const getUserOrders = async (req, res) => {
             ...result
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -88,7 +88,7 @@ const getListOrders = async (req, res) => {
             ...result
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });

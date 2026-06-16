@@ -12,7 +12,6 @@ const addProduct = async (req, res) => {
             imageUrl
         });
 
-        
         return res.status(201).json({
             success: true,
             message: "Product added successfully",
@@ -20,15 +19,12 @@ const addProduct = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to add product",
-            error: error.message
+            message: error.message
         });
     }
 };
-
-
 
 const getListProducts = async (req, res) => {
     try {
@@ -41,42 +37,29 @@ const getListProducts = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to retrieve products",
-            error: error.message
+            message: error.message
         });
     }
 };
-
-
 
 const getProductById = async (req, res) => {
     try {
         const product = await getProductByIdService(req.params.id);
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Product details retrieved successfully",
             product,
         });
     } catch (error) {
-        if (error.message === "Product not found") {
-            return res.status(404).json({
-                success: false,
-                message: error.message,
-            });
-        }
-
-        res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to retrieve product",
-            error: error.message,
+            message: error.message
         });
     }
 };
-
-
 
 const updateProduct = async (req, res) => {
     try {
@@ -85,15 +68,15 @@ const updateProduct = async (req, res) => {
             req.body
         );
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Product updated successfully",
             product,
         });
     } catch (error) {
-        res.status(error.statusCode || 500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Failed to update product",
+            message: error.message
         });
     }
 };
@@ -102,15 +85,15 @@ const deleteProduct = async (req, res) => {
     try {
         const product = await deleteProductService(req.params.id);
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Product deleted successfully",
             product,
         });
     } catch (error) {
-        res.status(error.statusCode || 500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Failed to delete product",
+            message: error.message
         });
     }
 };

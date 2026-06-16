@@ -8,7 +8,6 @@ import {
 
 const addToCart = async (req, res) => {
     try {
-        console.log("jsaj" + req.user.id)
         const userId = req.user.id;
         const { items } = req.body;
 
@@ -19,14 +18,14 @@ const addToCart = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "Item added to cart",
+            message: "Product added to cart",
             cart
         });
 
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Server error"
+            message: error.message
         });
     }
 };
@@ -41,9 +40,9 @@ const getCart = async (req, res) => {
             cart
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Server error"
+            message: error.message
         });
     }
 };
@@ -69,9 +68,9 @@ const updateCart = async (req, res) => {
             cart
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Server error"
+            message: error.message
         });
     }
 };
@@ -85,9 +84,9 @@ const clearCart = async (req, res) => {
             message: "Cart cleared successfully"
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Server error"
+            message: error.message
         });
     }
 };
@@ -106,9 +105,9 @@ const removeSingleItem = async (req, res) => {
             cart
         });
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: error.message || "Server error"
+            message: error.message
         });
     }
 };

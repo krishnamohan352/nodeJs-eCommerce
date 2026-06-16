@@ -45,7 +45,6 @@ describe("POST /api/role/create", () => {
 
 });
 
-
 describe("GET /api/role/all", () => {
 
     it("should return all roles for admin with permission", async () => {

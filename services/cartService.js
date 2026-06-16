@@ -10,7 +10,7 @@ const addToCartService = async ({ userId, items }) => {
         const product = await Product.findById(item.productId);
 
         if (!product) {
-            throw new Error("Product not found");
+            throw new AppError("Product not found", 400);
         }
 
         const itemTotal = product.price * item.quantity;
@@ -82,7 +82,7 @@ const updateCartService = async ({ userId, productId, quantity }) => {
         status: "active"
     });
     if (!cart) {
-        throw new Error("Cart not found");
+        throw new AppError("Cart not found", 400);
     }
     const itemIndex = cart.items.findIndex(
         item => item.productId.toString() === productId
@@ -110,7 +110,7 @@ const clearCartService = async ({ userId }) => {
     });
 
     if (!cart) {
-        throw new Error("Cart not found");
+        throw new AppError("Cart not found", 400);
     }
 
     return true;
@@ -124,7 +124,7 @@ const removeSingleItemService = async ({ userId, itemId }) => {
     });
 
     if (!cart) {
-        throw new Error("Cart not found");
+        throw new AppError("Cart not found", 400);
     }
 
     const itemIndex = cart.items.findIndex(
@@ -132,7 +132,7 @@ const removeSingleItemService = async ({ userId, itemId }) => {
     );
 
     if (itemIndex === -1) {
-        throw new Error("Item not found in cart");
+        throw new AppError("Item not found in cart", 400);
     }
 
     cart.items.splice(itemIndex, 1);

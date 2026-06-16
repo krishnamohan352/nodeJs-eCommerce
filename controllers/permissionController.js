@@ -6,13 +6,13 @@ const createPermission = async (req, res) => {
 
         const permission = await createPermissionService({ name, description });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Permission created",
             permission
         });
     } catch (error) {
-        res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -23,14 +23,14 @@ const getAllPermissions = async (req, res) => {
     try {
         const permissions = await getAllPermissionsService();
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             permissions
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
-            message: "Internal server error"
+            message: error.message
         });
     }
 };
@@ -42,13 +42,13 @@ const updatePermission = async (req, res) => {
 
         const permission = await updatePermissionService(id, { name, description });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Permission updated",
             permission
         });
     } catch (error) {
-        res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });
@@ -61,12 +61,12 @@ const deletePermission = async (req, res) => {
 
         await deletePermissionService(id);
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: "Permission deleted"
+            message: "Permission deleted successfully"
         });
     } catch (error) {
-        res.status(400).json({
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });

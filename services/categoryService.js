@@ -6,20 +6,20 @@ const createCategoryService = async (data) => {
     try {
         const { name, parentCategory } = data;
         if (!name) {
-            throw new Error("Category name is required");
+            throw new AppError("Category name is required", 400);
         }
         if (parentCategory) {
             const parent = await Category.findById(parentCategory);
 
             if (!parent) {
-                throw new Error("Parent category not found");
+                throw new AppError("Parent category not found", 400);
             }
         }
 
         const existingCategory = await Category.findOne({ name });
 
         if (existingCategory) {
-            throw new Error("Category already exists");
+            throw new AppError("Category already exists", 400);
         }
 
         const category = await Category.create({
@@ -28,7 +28,6 @@ const createCategoryService = async (data) => {
         });
         return category;
     } catch (error) {
-        console.log("Error createCategory sevice=>" + error.message);
         throw error;
     }
 }
@@ -38,13 +37,13 @@ const updateCategoryService = async (categoryId, updateData) => {
     const { name, parentCategory } = updateData;
     if (parentCategory) {
         if (categoryId === parentCategory) {
-            throw new Error("Category cannot be its own parent");
+            throw new AppError("Category cannot be its own parent", 400);
         }
 
         const parent = await Category.findById(parentCategory);
 
         if (!parent) {
-            throw new Error("Parent category not found");
+            throw new AppError("Parent category not found", 400);
         }
     }
 
@@ -61,9 +60,8 @@ const updateCategoryService = async (categoryId, updateData) => {
     ).populate("parentCategory", "name");
 
     if (!category) {
-        throw new Error("Category not found");
+        throw new AppError("Category not found", 400);
     }
-
     return category;
 };
 
@@ -74,7 +72,6 @@ const getListCategoryService = async () => {
 
         return categories;
     } catch (error) {
-        console.error("Error getListCategoryService =>", error.message);
         throw error;
     }
 };
@@ -83,14 +80,14 @@ const deleteCategoryService = async (categoryId) => {
 
     const category = await Category.findById(categoryId);
     if (!category) {
-        throw new Error("Category not found");
+        throw new AppError("Category not found", 400);
     }
     const subCategories = await Category.findOne({
         parentCategory: categoryId
     });
     if (subCategories) {
-        throw new Error(
-            "Cannot delete category because it has subcategories"
+        throw new AppError(
+            "Cannot delete category because it has subcategories", 400
         );
     }
     const product = await Product.findOne({
@@ -100,8 +97,8 @@ const deleteCategoryService = async (categoryId) => {
         ]
     });
     if (product) {
-        throw new Error(
-            "Cannot delete category because products are assigned to it"
+        throw new AppError(
+            "Cannot delete category because products are assigned to it", 400
         );
     }
     await Category.findByIdAndDelete(categoryId);

@@ -6,7 +6,7 @@ const createRoleService = async ({ name, permissions }) => {
     const existing = await Role.findOne({ name });
 
     if (existing) {
-        throw new AppError("Role already exists", 400)
+        throw new AppError("Role already exists", 400);
     }
 
     const role = await Role.create({

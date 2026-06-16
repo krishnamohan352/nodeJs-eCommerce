@@ -7,10 +7,10 @@ import { PERMISSIONS } from '../constants/permissions.js';
 
 const productRouter = express.Router();
 
-productRouter.post('/', upload.single('image'), adminAuth, checkPermission("create_product"), addProduct);
+productRouter.post('/', upload.single('image'), adminAuth, checkPermission(PERMISSIONS.CREATE_PRODUCT), addProduct);
 productRouter.get('/', getListProducts);
 productRouter.get('/:id', getProductById);
-productRouter.put('/:id', adminAuth, updateProduct);
-productRouter.delete('/:id', adminAuth, deleteProduct);
+productRouter.put('/:id', upload.single('image'), adminAuth, checkPermission(PERMISSIONS.UPDATE_PRODUCT), updateProduct);
+productRouter.delete('/:id', adminAuth, checkPermission(PERMISSIONS.DELETE_PRODUCT), deleteProduct);
 
 export default productRouter;

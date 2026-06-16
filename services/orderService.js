@@ -10,27 +10,27 @@ const placeOrderService = async (userId, address, paymentMethod) => {
         status: "active"
     });
 
-    if (!cart || cart.items.length === 0) {
-        throw new Error("Active cart is empty");
-    }
-
     if (!address) {
-        throw new Error("Address is required");
+        throw new AppError("Address is required", 400);
     }
 
     if (!paymentMethod) {
-        throw new Error("Payment method is required");
+        throw new AppError("Payment method is required", 400);
+    }
+
+    if (!cart || cart.items.length === 0) {
+        throw new AppError("Active cart is empty", 404);
     }
 
     for (let item of cart.items) {
 
         const product = await Product.findById(item.productId);
         if (!product) {
-            throw new Error("Product not found");
+            throw new AppError("Product not found", 400);
         }
 
         if (product.stock < item.quantity) {
-            throw new Error(`Insufficient stock for ${product.name}`);
+            throw new AppError(`Insufficient stock for ${product.name}`, 400);
         }
     }
 
@@ -62,7 +62,6 @@ const placeOrderService = async (userId, address, paymentMethod) => {
 
 const updateOrderStatusService = async (orderId, status) => {
 
-    console.log(orderId);
     const allowedStatus = [
         "pending",
         "shipped",
@@ -72,13 +71,13 @@ const updateOrderStatusService = async (orderId, status) => {
     ];
 
     if (!allowedStatus.includes(status)) {
-        throw new Error("Invalid status");
+        throw new AppError("Invalid status", 400);
     }
 
     const order = await Order.findById(orderId);
 
     if (!order) {
-        throw new Error("Order not found");
+        throw new AppError("Order not found", 400);
     }
 
     const transitions = {
@@ -90,7 +89,7 @@ const updateOrderStatusService = async (orderId, status) => {
     };
 
     if (!transitions[order.status].includes(status)) {
-        throw new Error(`Cannot change ${order.status} → ${status}`);
+        throw new AppError(`Cannot change ${order.status} → ${status}`, 400);
     }
 
     order.status = status;
@@ -133,11 +132,11 @@ const getOrderByIdService = async (orderId, userId) => {
         .populate("items.productId", "name price image");
 
     if (!order) {
-        throw new Error("Order not found");
+        throw new AppError("Order not found", 400);
     }
 
     if (order.userId.toString() !== userId) {
-        throw new Error("Not authorized to view this order");
+        throw new AppError("Not authorized to view this order", 400);
     }
 
     return order;

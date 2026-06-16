@@ -6,7 +6,7 @@ const createPermissionService = async ({ name, description }) => {
     const existing = await Permission.findOne({ name });
 
     if (existing) {
-        throw new Error("Permission already exists");
+        throw new AppError("Permission already exists", 400);
     }
 
     const permission = await Permission.create({
@@ -26,7 +26,7 @@ const updatePermissionService = async (id, { name, description }) => {
     const permission = await Permission.findById(id);
 
     if (!permission) {
-        throw new Error("Permission not found");
+        throw new AppError("Permission not found", 400);
     }
 
     permission.name = name || permission.name;
@@ -41,7 +41,7 @@ const deletePermissionService = async (id) => {
     const permission = await Permission.findByIdAndDelete(id);
 
     if (!permission) {
-        throw new Error("Permission not found");
+        throw new AppError("Permission not found", 400);
     }
 
     return permission;

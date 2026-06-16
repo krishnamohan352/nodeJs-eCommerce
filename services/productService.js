@@ -14,39 +14,35 @@ const addProductService = async ({
 }) => {
     try {
         if (!name) {
-            throw new Error("Product name is required");
+            throw new AppError("Product name is required", 400);
         }
 
         if (!description) {
-            throw new Error("Description is required");
+            throw new AppError("Description is required", 400);
         }
 
         if (!price || price <= 0) {
-            throw new Error("Valid price is required");
+            throw new AppError("Valid price is required", 400);
         }
 
         if (!category) {
-            throw new Error("Category is required");
+            throw new AppError("Category is required", 400);
         }
 
         if (Number(stock) < 0) {
-            throw new Error("Stock cannot be negative");
-        }
-
-        if (!imageUrl) {
-            throw new Error("Product image is required");
+            throw new AppError("Stock cannot be negative", 400);
         }
 
         const categoryExists = await Category.findById(category);
 
         if (!categoryExists) {
-            throw new Error("Category not found");
+            throw new AppError("Category not found", 400);
         }
 
         if (subcategory) {
             const subCategoryExists = await Category.findById(subcategory);
             if (!subCategoryExists) {
-                throw new Error("Subcategory not found");
+                throw new AppError("Subcategory not found", 400);
             }
         }
         const product = await Product.create({
@@ -61,6 +57,7 @@ const addProductService = async ({
         });
         return product;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 };
@@ -90,14 +87,16 @@ const updateProductService = async (productId, updateData) => {
     const product = await Product.findByIdAndUpdate(
         productId,
         updateData,
-        { new: true, runValidators: true }
+        {
+            returnDocument: "after",
+            runValidators: true
+        }
     ).populate("category", "name")
         .populate("subcategory", "name");;
 
     if (!product) {
-        throw new Error("Product not found", 404);
+        throw new AppError("Product not found", 404);
     }
-
     return product;
 };
 
