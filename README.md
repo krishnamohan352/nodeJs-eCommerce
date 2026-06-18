@@ -42,7 +42,7 @@ JWT_SECRET=ecommerce_secret_key
 ## 4. Run Server
 
 ```bash
-npm run dev
+npm run server
 
 ## 5. Server Information
 
@@ -55,7 +55,7 @@ http://localhost:4000
 
 ---
 
-##  Register APIs
+##  Auth APIs
 
 ### Register User
 - **Method:** POST  

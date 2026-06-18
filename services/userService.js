@@ -109,7 +109,7 @@ const updateUserService = async (userId, updateData) => {
             returnDocument: "after",
             runValidators: true
         }
-    ).populate("role", "name");
+    ).select("-password").populate("role", "name");
     return updatedUser;
 };
 
@@ -146,10 +146,9 @@ const loginUserService = async ({ email, password }) => {
 
 const getListUsersService = async () => {
     try {
-        const users = await User.find().populate('role');
+        const users = await User.find().select("-password").populate('role');
         return users;
     } catch (error) {
-        console.log("Get User Service");
         throw error;
     }
 }
