@@ -3,61 +3,64 @@ import Product from '../models/productModel.js';
 import AppError from "../utils/AppError.js";
 
 const addToCartService = async ({ userId, items }) => {
+    try {
+        let totalPrice = 0;
+        const updatedItems = [];
+        for (const item of items) {
+            const product = await Product.findById(item.productId);
 
-    let totalPrice = 0;
-    const updatedItems = [];
-    for (const item of items) {
-        const product = await Product.findById(item.productId);
-
-        if (!product) {
-            throw new AppError("Product not found", 400);
-        }
-
-        const itemTotal = product.price * item.quantity;
-        totalPrice += itemTotal;
-
-        updatedItems.push({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: product.price
-        });
-    }
-
-    let cart = await Cart.findOne({
-        userId,
-        status: "active"
-    });
-
-    if (!cart) {
-        cart = new Cart({
-            userId,
-            status: "active",
-            items: updatedItems,
-            totalPrice
-        });
-    } else {
-
-        for (const newItem of updatedItems) {
-
-            const existingItem = cart.items.find(
-                (i) => i.productId.toString() === newItem.productId.toString()
-            );
-
-            if (existingItem) {
-                existingItem.quantity += newItem.quantity;
-            } else {
-                cart.items.push(newItem);
+            if (!product) {
+                throw new AppError("Product not found", 400);
             }
+
+            const itemTotal = product.price * item.quantity;
+            totalPrice += itemTotal;
+
+            updatedItems.push({
+                productId: item.productId,
+                quantity: item.quantity,
+                price: product.price
+            });
         }
 
-        cart.totalPrice = cart.items.reduce(
-            (sum, i) => sum + i.price * i.quantity,
-            0
-        );
-    }
+        let cart = await Cart.findOne({
+            userId,
+            status: "active"
+        });
 
-    await cart.save();
-    return cart;
+        if (!cart) {
+            cart = new Cart({
+                userId,
+                status: "active",
+                items: updatedItems,
+                totalPrice
+            });
+        } else {
+
+            for (const newItem of updatedItems) {
+
+                const existingItem = cart.items.find(
+                    (i) => i.productId.toString() === newItem.productId.toString()
+                );
+
+                if (existingItem) {
+                    existingItem.quantity += newItem.quantity;
+                } else {
+                    cart.items.push(newItem);
+                }
+            }
+
+            cart.totalPrice = cart.items.reduce(
+                (sum, i) => sum + i.price * i.quantity,
+                0
+            );
+        }
+
+        await cart.save();
+        return cart;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const getCartService = async ({ userId }) => {
@@ -77,29 +80,33 @@ const getCartService = async ({ userId }) => {
 };
 
 const updateCartService = async ({ userId, productId, quantity }) => {
-    const cart = await Cart.findOne({
-        userId,
-        status: "active"
-    });
-    if (!cart) {
-        throw new AppError("Cart not found", 400);
+    try {
+        const cart = await Cart.findOne({
+            userId,
+            status: "active"
+        });
+        if (!cart) {
+            throw new AppError("Cart not found", 400);
+        }
+        const itemIndex = cart.items.findIndex(
+            item => item.productId.toString() === productId
+        );
+
+        if (itemIndex === -1) {
+            throw new Error("Item not found in cart");
+        }
+
+        cart.items[itemIndex].quantity = quantity;
+
+        cart.totalPrice = cart.items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+        );
+        await cart.save();
+        return cart;
+    } catch (error) {
+        throw error
     }
-    const itemIndex = cart.items.findIndex(
-        item => item.productId.toString() === productId
-    );
-
-    if (itemIndex === -1) {
-        throw new Error("Item not found in cart");
-    }
-
-    cart.items[itemIndex].quantity = quantity;
-
-    cart.totalPrice = cart.items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-    );
-    await cart.save();
-    return cart;
 };
 
 const clearCartService = async ({ userId }) => {

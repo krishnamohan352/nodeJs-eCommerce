@@ -57,11 +57,9 @@ const addProductService = async ({
         });
         return product;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 };
-
 
 const getListProductsService = async () => {
     try {
@@ -70,45 +68,55 @@ const getListProductsService = async () => {
             .populate("subcategory", "name");
         return products;
     } catch (error) {
-        console.log('Error getListProductsService');
+        throw error;
     }
 };
 
 const getProductByIdService = async (productId) => {
-    const product = await Product.findById(productId).populate("category", "name")
-        .populate("subcategory", "name");
-    if (!product) {
-        throw new Error("Product not found");
+    try {
+        const product = await Product.findById(productId).populate("category", "name")
+            .populate("subcategory", "name");
+        if (!product) {
+            throw new AppError("Product not found", 400);
+        }
+        return product;
+    } catch (error) {
+        throw error;
     }
-    return product;
 };
 
 const updateProductService = async (productId, updateData) => {
-    const product = await Product.findByIdAndUpdate(
-        productId,
-        updateData,
-        {
-            returnDocument: "after",
-            runValidators: true
-        }
-    ).populate("category", "name")
-        .populate("subcategory", "name");;
+    try {
+        const product = await Product.findByIdAndUpdate(
+            productId,
+            updateData,
+            {
+                returnDocument: "after",
+                runValidators: true
+            }
+        ).populate("category", "name")
+            .populate("subcategory", "name");;
 
-    if (!product) {
-        throw new AppError("Product not found", 404);
+        if (!product) {
+            throw new AppError("Product not found", 404);
+        }
+        return product;
+    } catch (error) {
+        throw error;
     }
-    return product;
 };
 
-
 const deleteProductService = async (productId) => {
-    const product = await Product.findByIdAndDelete(productId);
+    try {
+        const product = await Product.findByIdAndDelete(productId);
 
-    if (!product) {
-        throw new Error("Product not found", 404);
+        if (!product) {
+            throw new Error("Product not found", 404);
+        }
+        return product;
+    } catch (error) {
+        throw error;
     }
-
-    return product;
 };
 
 export { addProductService, getListProductsService, getProductByIdService, updateProductService, deleteProductService }

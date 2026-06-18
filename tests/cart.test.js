@@ -43,6 +43,103 @@ describe("POST /api/cart/add", () => {
 
 });
 
+describe("PUT /api/cart/update", () => {
+
+    it("should add product to cart", async () => {
+
+        const category = await createCategory();
+        const subCategory = await createSubCategory(category._id);
+
+        const product = await createProduct({
+            name: "Test Product",
+            category: category._id,
+            subcategory: subCategory._id
+        });
+
+        await Cart.create({
+            userId: user._id,
+            status: "active",
+            items: [
+                {
+                    productId: product._id,
+                    quantity: 2,
+                    price: 10
+                }
+            ],
+            totalPrice: 20
+        });
+
+        const response = await request(app)
+            .put("/api/cart/update")   // ✅ FIXED
+            .set("Authorization", `Bearer ${userToken}`)
+            .send(
+
+                {
+                    productId: product._id,
+                    quantity: 1
+                }
+
+            );
+
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.message).toBe("Cart updated successfully");
+
+        const cart = await Cart.findOne({ userId: user._id });
+
+        expect(cart).not.toBeNull();
+        expect(cart.items.length).toBe(1);
+        expect(cart.items[0].productId.toString())
+            .toBe(product._id.toString());
+
+        expect(cart.items[0].quantity).toBe(1);
+    });
+
+});
+
+describe("GET /api/cart", () => {
+
+    it("should return user cart successfully", async () => {
+
+        const category = await createCategory();
+        const subCategory = await createSubCategory(category._id);
+
+        const product = await createProduct({
+            name: "Test Product",
+            category: category._id,
+            subcategory: subCategory._id
+        });
+
+        await Cart.create({
+            userId: user._id,
+            status: "active",
+            items: [
+                {
+                    productId: product._id,
+                    quantity: 2,
+                    price: 10
+                }
+            ],
+            totalPrice: 20
+        });
+
+        const response = await request(app)
+            .get("/api/cart")
+            .set("Authorization", `Bearer ${userToken}`);
+
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+
+        expect(response.body.cart).toBeDefined();
+        expect(response.body.cart.items.length).toBe(1);
+
+        expect(response.body.cart.items[0].productId.toString())
+            .toBe(product._id.toString());
+
+        expect(response.body.cart.totalPrice).toBe(20);
+    });
+});
+
 const createCategory = async (name = "Electronics") => {
     return await Category.create({ name });
 };

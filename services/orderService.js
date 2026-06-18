@@ -2,6 +2,7 @@ import Cart from "../models/cartModel.js";
 import Order from "../models/orderModel.js";
 import Product from "../models/productModel.js";
 import AppError from "../utils/AppError.js";
+import mongoose from "mongoose";
 
 const placeOrderService = async (userId, address, paymentMethod) => {
 
@@ -61,54 +62,65 @@ const placeOrderService = async (userId, address, paymentMethod) => {
 };
 
 const updateOrderStatusService = async (orderId, status) => {
+    try {
+        const allowedStatus = [
+            "pending",
+            "shipped",
+            "delivered",
+            "cancelled",
+            "returned"
+        ];
 
-    const allowedStatus = [
-        "pending",
-        "shipped",
-        "delivered",
-        "cancelled",
-        "returned"
-    ];
+        if (!allowedStatus.includes(status)) {
+            throw new AppError("Invalid status", 400);
+        }
 
-    if (!allowedStatus.includes(status)) {
-        throw new AppError("Invalid status", 400);
+        const order = await Order.findById(orderId);
+
+        if (!order) {
+            throw new AppError("Order not found", 400);
+        }
+
+        const transitions = {
+            pending: ["shipped", "cancelled"],
+            shipped: ["delivered", "returned"],
+            delivered: [],
+            cancelled: [],
+            returned: []
+        };
+
+        if (!transitions[order.status].includes(status)) {
+            throw new AppError(`Cannot change ${order.status} → ${status}`, 400);
+        }
+
+        order.status = status;
+        await order.save();
+
+        return order;
+    } catch (error) {
+        throw error;
     }
-
-    const order = await Order.findById(orderId);
-
-    if (!order) {
-        throw new AppError("Order not found", 400);
-    }
-
-    const transitions = {
-        pending: ["shipped", "cancelled"],
-        shipped: ["delivered", "returned"],
-        delivered: [],
-        cancelled: [],
-        returned: []
-    };
-
-    if (!transitions[order.status].includes(status)) {
-        throw new AppError(`Cannot change ${order.status} → ${status}`, 400);
-    }
-
-    order.status = status;
-    await order.save();
-
-    return order;
 };
 
 const getUserOrdersService = async (userId) => {
-    const orders = await Order.find({ userId })
-        .sort({ createdAt: -1 })
-        .populate("items.productId", "name price image");
+    try {
 
-    const totalOrders = await Order.countDocuments({ userId });
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            throw new AppError("Invalid userId", 400);
+        }
+        const orders = await Order.find({ userId })
+            .sort({ createdAt: -1 })
+            .populate("items.productId", "name price image");
 
-    return {
-        orders,
-        totalOrders
-    };
+        const totalOrders = await Order.countDocuments({ userId });
+
+        return {
+            orders,
+            totalOrders
+        };
+    } catch (error) {
+        throw error
+    }
 };
 
 const getListOrdersService = async () => {
