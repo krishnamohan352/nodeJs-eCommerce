@@ -20,13 +20,11 @@ A scalable backend API built with **Node.js, Express, MongoDB**, featuring authe
 
 ## 1. Clone Repository
 
-```bash
-git clone https://github.com/your-repo/node-ecommerce.git
-cd node-ecommerce
+git clone https://github.com/krishnamohan352/nodeJs-eCommerce.git
+cd nodeJs-eCommerce
 
 ## 2. Install Dependencies
 
-```bash
 npm install
 
 ## 3. Create Environment Variables
@@ -35,8 +33,9 @@ Create a `.env` file in the root directory:
 
 ```env
 PORT=4000
-MONGO_URI=mongodb://localhost:27017/ecommerce
-JWT_SECRET=your_secret_key
+MONGODB_URI=mongodb://localhost:27017
+DB_NAME=ecommerce
+JWT_SECRET=ecommerce_secret_key
 
 ## 4. Run Server
 
@@ -47,7 +46,6 @@ npm run dev
 
 Server runs on:
 
-```text id="srv1"
 http://localhost:4000
 
 # 📡 API Documentation
