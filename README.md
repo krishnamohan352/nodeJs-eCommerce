@@ -20,11 +20,13 @@ A scalable backend API built with **Node.js, Express, MongoDB**, featuring authe
 
 ## 1. Clone Repository
 
+```bash
 git clone https://github.com/krishnamohan352/nodeJs-eCommerce.git
 cd nodeJs-eCommerce
 
 ## 2. Install Dependencies
 
+```bash
 npm install
 
 ## 3. Create Environment Variables
@@ -42,17 +44,18 @@ JWT_SECRET=ecommerce_secret_key
 ```bash
 npm run dev
 
-## 🌐 Server Information
+## 5. Server Information
 
 Server runs on:
 
+```text
 http://localhost:4000
 
-# 📡 API Documentation
+# API Documentation
 
 ---
 
-## 🔐 Auth APIs
+##  Register APIs
 
 ### Register User
 - **Method:** POST  
@@ -68,12 +71,12 @@ http://localhost:4000
 
 ---
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### ✔ Unit Tests
 - Service layer testing
 - Business logic validation
-- Functions tested in isolation
+- Functions tested
 
 ---
 
@@ -84,6 +87,6 @@ http://localhost:4000
 
 ---
 
-### ✔ End-to-End Tests (Optional)
+### ✔ End-to-End Tests
 - Complete user flow testing
 - Example: Register → Login → Add to Cart → Place Order
