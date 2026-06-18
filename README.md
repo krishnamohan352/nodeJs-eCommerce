@@ -18,9 +18,9 @@ A scalable backend API built with **Node.js, Express, MongoDB**, featuring authe
 
 ---
 
+```bash
 ## 1. Clone Repository
 
-```bash
 git clone https://github.com/krishnamohan352/nodeJs-eCommerce.git
 cd nodeJs-eCommerce
 
