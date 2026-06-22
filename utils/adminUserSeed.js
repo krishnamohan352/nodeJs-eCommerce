@@ -27,6 +27,6 @@ export const createAdminUser = async () => {
         });
 
     } catch (error) {
-        console.error("Admin creation error:", error.message);
+        
     }
 };
