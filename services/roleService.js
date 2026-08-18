@@ -26,7 +26,7 @@ const updateRoleService = async ({ id, name, permissions }) => {
     const role = await Role.findByIdAndUpdate(
         id,
         { name, permissions },
-        { new: true }
+        { returnDocument: "after" }
     ).populate("permissions");
 
     if (!role) {
