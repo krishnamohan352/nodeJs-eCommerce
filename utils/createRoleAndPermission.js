@@ -1,6 +1,6 @@
 import Role from "../models/roleModel.js";
 import Permission from "../models/permissionModel.js";
-import { permissionNames } from "../constants/permissions.js";
+import { permissionNames, userPermissionNames } from "../constants/permissions.js";
 
 export const createRoleAndPermission = async () => {
     try {
@@ -31,11 +31,26 @@ export const createRoleAndPermission = async () => {
             }
         );
 
+        const userPermissions = await Promise.all(
+            userPermissionNames.map((name) =>
+                Permission.findOneAndUpdate(
+                    { name },
+                    { name },
+                    {
+                        upsert: true,
+                        returnDocument: "after",
+                    }
+                )
+            )
+        );
+
+        const userPermissionIds = userPermissions.map((permission) => permission._id);
+
         await Role.findOneAndUpdate(
             { name: "user" },
             {
                 name: "user",
-                permissions: [],
+                permissions: userPermissionIds,
             },
             {
                 upsert: true,

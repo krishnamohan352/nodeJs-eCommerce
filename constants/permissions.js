@@ -9,8 +9,9 @@ export const PERMISSIONS = {
     UPDATE_PRODUCT: "update_product",
     VIEW_PRODUCTS: "view_products",
 
-    VIEW_ORDERS: "view_orders",
     UPDATE_ORDERS: "update_orders",
+    VIEW_ALL_ORDERS: "view_all_orders",
+    UPDATE_ORDER_STATUS: "update_order_status",
 
     CREATE_PERMISSION: "create_permission",
     VIEW_PERMISSIONS: "view_permissions",
@@ -25,13 +26,10 @@ export const PERMISSIONS = {
     CREATE_USER: "create_user",
     UPDATE_USER: "update_user",
     DELETE_USER: "delete_user",
-    VIEW_USER: "view_user",
+    VIEW_USER: "view_user"
+};
 
-    VIEW_ALL_ORDERS: "view_all_orders",
-    UPDATE_ORDER_STATUS: "update_order_status",
-
-    //User Permissions
-
+export const USER_PERMISSIONS = {
     ADD_TO_CART: "add_to_cart",
     VIEW_CART: "view_cart",
     UPDATE_CART: "update_cart",
@@ -39,8 +37,9 @@ export const PERMISSIONS = {
     CLEAR_CART: "clear_cart",
 
     CREATE_ORDER: "create_order",
-    VIEW_ORDER: "view_order",    
+    VIEW_ORDER: "view_order",
+    VIEW_ORDERS: "view_orders",
 };
 
 export const permissionNames = Object.values(PERMISSIONS);
-
+export const userPermissionNames = Object.values(USER_PERMISSIONS);
